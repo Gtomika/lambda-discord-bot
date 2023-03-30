@@ -44,7 +44,7 @@ module "discord_interaction_lambda" {
   environment = var.environment
 
   handler_name = "discord_interaction_lambda_function.lambda_handler"
-  path_to_deployment_package = "${path.module}/discord_interaction_lambda.zip"
+  path_to_deployment_package = "${path.module}/../discord_interaction_lambda.zip"
   common_layer_arn = aws_lambda_layer_version.common_lambda_layer.arn
 
   command_handler_lambda_arns = [for command_handler in module.command_lambda_modules: command_handler.command_handler_lambda_arn]

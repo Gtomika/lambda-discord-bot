@@ -5,13 +5,13 @@ command_data = [
     command_name = "LambdaInfo"
     command_name_discord = "lambda_info"
     handler = "info_lambda_function/info_lambda_function.lambda_handler"
-    path_to_deployment_package = "info_lambda.zip"
+    path_to_deployment_package = "../info_lambda.zip"
   },
   {
     command_name = "ArchitectureChoice"
     command_name_discord = "architecture_choice"
     handler = "architecture_lambda_function/architecture_lambda_function.lambda_handler"
-    path_to_deployment_package = "architecture_lambda.zip"
+    path_to_deployment_package = "../architecture_lambda.zip"
   }
 ]
 
