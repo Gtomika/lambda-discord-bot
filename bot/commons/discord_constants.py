@@ -1,0 +1,2 @@
+ACK_TYPE = 1
+DEFER_TYPE = 5

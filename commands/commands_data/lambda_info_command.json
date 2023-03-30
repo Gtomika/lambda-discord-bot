@@ -1,0 +1,7 @@
+{
+  "type": 1,
+  "name": "lambda_info",
+  "description": "Get info about the lambda which executes this command",
+  "dm_permission": true,
+  "options": []
+}

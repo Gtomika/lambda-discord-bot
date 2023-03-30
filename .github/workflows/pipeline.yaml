@@ -1,0 +1,162 @@
+name: pipeline
+on:
+  push:
+    branches:
+      - master
+jobs:
+  package-common-layer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - run: |
+          python -m pip install -r requirements.txt --target python
+          echo "Installed all dependencies in './python' directory"
+          sudo apt install zip
+          zip -r common_layer.zip python bot/commons
+          echo "Zipped common layer into archive 'common_layer.zip'"
+          stat common_layer.zip
+      - uses: actions/upload-artifact@v3
+        with:
+          name: common-layer-deployment-package
+          path: common_layer.zip
+
+  package-discord-interaction-lambda:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          sudo apt install zip
+          zip -r discord_interaction_lambda.zip bot/discord_interaction_lambda_function
+      - uses: actions/upload-artifact@v3
+        with:
+          name: discord-interaction-lambda-package
+          path: discord_interaction_lambda.zip
+
+  package-info-lambda:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          sudo apt install zip
+          zip -r info_lambda.zip bot/info_lambda_function
+      - uses: actions/upload-artifact@v3
+        with:
+          name: info-lambda-package
+          path: info_lambda.zip
+
+  package-architecture-lambda:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          sudo apt install zip
+          zip -r architecture_lambda.zip bot/architecture_lambda_function
+      - uses: actions/upload-artifact@v3
+        with:
+          name: architecture-lambda-package
+          path: architecture_lambda.zip
+
+  terraform-validate:
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    working-directory: terraform
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+      - run: |
+          terraform init
+          terraform validate
+
+  terraform-plan:
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_STS_EXTERNAL_KEY: ${{ secrets.AWS_STS_EXTERNAL_KEY }}
+      AWS_TERRAFORM_ROLE_ARN: ${{ AWS_TERRAFORM_ROLE_ARN }}
+      ENVIRONMENT: ${{ vars.ENVIRONMENT }}
+      DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+      - uses: actions/download-artifact@v3
+        with:
+          path: terraform
+      - run: |
+          cd terraform
+          terraform init
+          terraform plan -out=app.tfplan -var-file=inputs.tfvars \
+            -var aws_region="$AWS_REGION" \
+            -var environment="$ENVIRONMENT" \
+            -var discord_bot_token="$DISCORD_BOT_TOKEN" \
+            -var aws_key_id="$AWS_ACCESS_KEY_ID" \
+            -var aws_secret_key="$AWS_SECRET_ACCESS_KEY" \
+            -var aws_terraform_role_arn="$AWS_TERRAFORM_ROLE_ARN" \
+            -var aws_assume_role_external_id="$AWS_STS_EXTERNAL_KEY"
+          cd ..
+      - uses: actions/upload-artifact@v3
+        with:
+          name: terraform-plan
+          path: terraform/app.tfplan
+    needs: [package-common-layer, package-discord-interaction-lambda, package-info-lambda, package-architecture-lambda, terraform-validate]
+
+  terraform-apply:
+    runs-on: ubuntu-latest
+    environment: manual_approval
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_STS_EXTERNAL_KEY: ${{ secrets.AWS_STS_EXTERNAL_KEY }}
+      AWS_TERRAFORM_ROLE_ARN: ${{ AWS_TERRAFORM_ROLE_ARN }}
+      ENVIRONMENT: ${{ vars.ENVIRONMENT }}
+      DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+      - uses: actions/download-artifact@v3
+        with:
+          path: terraform
+      - run:
+          cd terraform
+          terraform init
+          terraform apply -auto-approve "app.tfplan"
+    needs: terraform-plan
+
+  terraform-destroy:
+    runs-on: ubuntu-latest
+    environment: manual_approval
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_STS_EXTERNAL_KEY: ${{ secrets.AWS_STS_EXTERNAL_KEY }}
+      AWS_TERRAFORM_ROLE_ARN: ${{ AWS_TERRAFORM_ROLE_ARN }}
+      ENVIRONMENT: ${{ vars.ENVIRONMENT }}
+      DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+      - uses: actions/download-artifact@v3
+        with:
+          path: terraform
+      - run: |
+          cd terraform
+          terraform init 
+          terraform destroy -var-file=inputs.tfvars \
+            -var aws_region="$AWS_REGION" \
+            -var environment="$ENVIRONMENT" \
+            -var discord_bot_token="$DISCORD_BOT_TOKEN" \
+            -var aws_key_id="$AWS_ACCESS_KEY_ID" \
+            -var aws_secret_key="$AWS_SECRET_ACCESS_KEY" \
+            -var aws_terraform_role_arn="$AWS_TERRAFORM_ROLE_ARN" \
+            -var aws_assume_role_external_id="$AWS_STS_EXTERNAL_KEY"
+    needs: terraform-plan
+

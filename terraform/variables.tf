@@ -1,0 +1,67 @@
+# Provided in inputs.tfvars (static, not sensitive) ----------------------------------------------
+
+variable "app_name" {
+  type = string
+  description = "A name for the bot to be used in resource naming"
+}
+
+variable "command_data" {
+  type = list(object({
+    command_name: string # Terraform friendly command name
+    command_name_discord: string # command name as it is in Discord
+    handler: string # path to handler
+    path_to_deployment_package: string # deployment ZIP path relative to terraform root module
+  }))
+  description = "All the commands that the bot must process"
+}
+
+variable "discord_application_id" {
+  type = number
+  description = "Number that is the ID of the Discord bot"
+}
+
+variable "discord_application_public_key" {
+  type = string
+  description = "Public key for the bot"
+}
+
+# Provided from command line arguments (dynamic or sensitive) ---------------------------------------
+
+variable "aws_region" {
+  type = string
+  description = "Deployment AWS region"
+}
+
+variable "environment" {
+  type = string
+  description = "Deployment environment for example 'prd'"
+}
+
+variable "discord_bot_token" {
+  type = string
+  sensitive = true
+  description = "The Bot token that authorizes the bot to communicate with the Discord API"
+}
+
+variable "aws_key_id" {
+  type = string
+  sensitive = true
+  description = "AWS access key ID"
+}
+
+variable "aws_secret_key" {
+  type = string
+  sensitive = true
+  description = "AWS secret key"
+}
+
+variable "aws_terraform_role_arn" {
+  type = string
+  description = "ARN of the role Terraform must assume"
+}
+
+variable "aws_assume_role_external_id" {
+  type = string
+  sensitive = true
+  description = "Secret required to assume the Terraform role"
+}

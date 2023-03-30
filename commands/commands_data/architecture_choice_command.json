@@ -1,0 +1,24 @@
+{
+  "type": 1,
+  "name": "architecture_choice",
+  "description": "Which of these architectures would you chose?",
+  "dm_permission": true,
+  "options": [
+    {
+      "name": "architecture",
+      "description": "Architectures to chose from",
+      "required": true,
+      "type": 3,
+      "choices": [
+        {
+          "name": "Traditional architecture with AWS EC2 instances",
+          "value": "traditional"
+        },
+        {
+          "name": "Serverless architecture with AWS Lambda functions",
+          "value": "serverless"
+        }
+      ]
+    }
+  ]
+}
