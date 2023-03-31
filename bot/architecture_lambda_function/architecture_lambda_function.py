@@ -1,4 +1,4 @@
-from ..commons import discord_interaction_responder as responder
+from bot.commons import discord_interaction_responder as responder
 
 
 # This lambda is invoked by the discord interaction lambda

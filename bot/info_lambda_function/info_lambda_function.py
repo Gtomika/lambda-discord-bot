@@ -1,7 +1,7 @@
 import os
 import datetime
 
-from ..commons import discord_interaction_responder as responder
+from bot.commons import discord_interaction_responder as responder
 
 aws_region = os.getenv('AWS_REGION')
 function_name = os.getenv('AWS_LAMBDA_FUNCTION_NAME')

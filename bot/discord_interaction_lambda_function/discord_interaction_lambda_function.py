@@ -4,8 +4,9 @@ from nacl.exceptions import BadSignatureError
 import json
 import boto3
 
-import api_gateway_interactions as agi
-from discord_constants import ACK_TYPE, DEFER_TYPE
+from bot.commons import discord_interaction_responder as responder
+from bot.commons import api_gateway_interactions as agi
+from bot.commons.discord_constants import ACK_TYPE, DEFER_TYPE
 
 application_public_key = os.getenv('APPLICATION_PUBLIC_KEY')
 verify_key = VerifyKey(bytes.fromhex(application_public_key))
