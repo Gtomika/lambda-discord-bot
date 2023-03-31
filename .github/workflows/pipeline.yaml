@@ -85,6 +85,7 @@ jobs:
           cd terraform
           terraform init
           terraform validate
+    needs: [package-common-layer, package-discord-interaction-lambda, package-info-lambda, package-architecture-lambda]
 
   terraform-plan:
     runs-on: ubuntu-latest
@@ -118,7 +119,7 @@ jobs:
         with:
           name: terraform-plan
           path: terraform/app.tfplan
-    needs: [package-common-layer, package-discord-interaction-lambda, package-info-lambda, package-architecture-lambda, terraform-validate]
+    needs: [terraform-validate]
 
   terraform-apply:
     runs-on: ubuntu-latest
