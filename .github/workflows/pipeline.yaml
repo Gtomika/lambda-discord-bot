@@ -1,5 +1,5 @@
 name: deployment-pipeline
-run-name: Deployment of the Lambda Discord Bot by @${{ github.actor }}
+run-name: Pipeline | ${{ github.event.head_commit.message }} | By @${{ github.actor }}
 on:
   push:
     branches:
@@ -174,7 +174,7 @@ jobs:
     env:
       BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
       APPLICATION_ID: ${{ vars.DISCORD_APPLICATION_ID }}
-      GUILD_ID: ${{ var.DISCORD_TEST_GUILD_ID }}
+      GUILD_ID: ${{ vars.DISCORD_TEST_GUILD_ID }}
       COMMAND_TYPE: GUILD
     steps:
       - uses: actions/checkout@v3

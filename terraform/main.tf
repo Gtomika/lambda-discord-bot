@@ -1,7 +1,13 @@
+locals {
+  common_layer_package_path = "${path.module}/../common-layer-deployment-package/common_layer.zip"
+  discord_interaction_lambda_package_path = "${path.module}/../discord-interaction-lambda-package/discord_interaction_lambda.zip"
+}
+
 # The lambda layer that contains the libraries
 resource "aws_lambda_layer_version" "common_lambda_layer" {
   layer_name = "Commons-${var.app_name}-${var.environment}-${var.aws_region}"
-  filename = "${path.module}/../common-layer-deployment-package/common_layer.zip"
+  filename = local.common_layer_package_path
+  source_code_hash = filebase64sha256(local.common_layer_package_path)
   compatible_runtimes = ["python3.9"]
 }
 
@@ -44,7 +50,7 @@ module "discord_interaction_lambda" {
   environment = var.environment
 
   handler_name = "discord_interaction_lambda_function.lambda_handler"
-  path_to_deployment_package = "${path.module}/../discord-interaction-lambda-package/discord_interaction_lambda.zip"
+  path_to_deployment_package = local.discord_interaction_lambda_package_path
   common_layer_arn = aws_lambda_layer_version.common_lambda_layer.arn
 
   command_handler_lambda_arns = [for command_handler in module.command_lambda_modules: command_handler.command_handler_lambda_arn]
