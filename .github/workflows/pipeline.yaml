@@ -43,6 +43,7 @@ jobs:
         with:
           name: common-layer-deployment-package
           path: common_layer.zip
+    needs: [run-tests]
 
   package-discord-interaction-lambda:
     runs-on: ubuntu-latest
@@ -57,6 +58,7 @@ jobs:
         with:
           name: discord-interaction-lambda-package
           path: discord_interaction_lambda.zip
+    needs: [run-tests]
 
   package-info-lambda:
     runs-on: ubuntu-latest
@@ -71,6 +73,7 @@ jobs:
         with:
           name: info-lambda-package
           path: info_lambda.zip
+    needs: [run-tests]
 
   package-architecture-lambda:
     runs-on: ubuntu-latest
@@ -85,6 +88,7 @@ jobs:
         with:
           name: architecture-lambda-package
           path: architecture_lambda.zip
+    needs: [run-tests]
 
   terraform-validate:
     runs-on: ubuntu-latest
