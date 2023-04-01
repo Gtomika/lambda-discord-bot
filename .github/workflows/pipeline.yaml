@@ -140,7 +140,7 @@ jobs:
         run:
           cd terraform
           terraform init
-          terraform apply -auto-approve "app.tfplan"
+          terraform apply -auto-approve "./../terraform-plan/app.tfplan"
     needs: terraform-plan
 
   terraform-destroy:
