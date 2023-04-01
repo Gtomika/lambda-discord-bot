@@ -12,5 +12,5 @@ def to_api_gateway_response(status_code: int, body):
             'Content-Type': 'application/json'
         },
         'isBase64Encoded': False,
-        'body': json.dumps(vars(body))
+        'body': json.dumps(body)
     }

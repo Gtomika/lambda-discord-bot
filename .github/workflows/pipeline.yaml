@@ -5,6 +5,23 @@ on:
     branches:
       - master
 jobs:
+
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install test dependencies
+        run: python -m pip install -r requirements-dev.txt
+      - name: Run Discord interaction lambda tests
+        run: python -m unittest bot/discord_interaction_lambda_function/test/test_discord_interaction_lambda.py
+      - name: Run Info command lambda tests
+        run: python -m unittest bot/info_lambda_function/test/test_info_lambda_function.py
+      - name: Run architecture choice command lambda tests
+        run: python -m unittest bot/architecture_lambda_function/test/test_architecture_lambda_function.py
+
   package-common-layer:
     runs-on: ubuntu-latest
     steps:
@@ -34,7 +51,7 @@ jobs:
       - name: Package discord interaction lambda
         run: |
           sudo apt install zip
-          zip -r discord_interaction_lambda.zip bot/discord_interaction_lambda_function
+          zip -r discord_interaction_lambda.zip bot/discord_interaction_lambda_function -x bot/discord_interaction_lambda_function/test**
           stat discord_interaction_lambda.zip
       - uses: actions/upload-artifact@v3
         with:
@@ -48,7 +65,7 @@ jobs:
       - name: Package info command lambda
         run: |
           sudo apt install zip
-          zip -r info_lambda.zip bot/info_lambda_function
+          zip -r info_lambda.zip bot/info_lambda_function -x bot/info_lambda_function/test**
           stat info_lambda.zip
       - uses: actions/upload-artifact@v3
         with:
@@ -62,7 +79,7 @@ jobs:
       - name: Package architecture choice lambda
         run: |
           sudo apt install zip
-          zip -r architecture_lambda.zip bot/architecture_lambda_function
+          zip -r architecture_lambda.zip bot/architecture_lambda_function -x bot/architecture_lambda_function/test**
           stat architecture_lambda.zip
       - uses: actions/upload-artifact@v3
         with:

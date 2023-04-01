@@ -4,28 +4,18 @@ from nacl.exceptions import BadSignatureError
 import json
 import boto3
 
-from bot.commons import discord_interaction_responder as responder
 from bot.commons import api_gateway_interactions as agi
-from bot.commons.discord_constants import ACK_TYPE, DEFER_TYPE
+from bot.commons.discord_utils import ACK_TYPE, DEFER_TYPE
 
 application_public_key = os.getenv('APPLICATION_PUBLIC_KEY')
 verify_key = VerifyKey(bytes.fromhex(application_public_key))
 
 # JSON serialized data of commands
 commands_data_json = os.getenv('COMMANDS')
-'''
-Expected format: list of command objects
-[
-    {
-        "command_name_discord": "lambda_info",
-        "command_lambda_arn": "arn:aws:..."
-    },
-    ...
-]
-'''
 commands_data = json.loads(commands_data_json)
 
 lambda_client = boto3.client('lambda')
+
 
 # this lambda handler receives interaction events from Discord,
 # through the AWS API Gateway
@@ -49,14 +39,14 @@ def lambda_handler(event, context):
     return trigger_slash_command_handler_lambda(body, body_raw)
 
 
-def trigger_slash_command_handler_lambda(body, bodyRaw: str):
+def trigger_slash_command_handler_lambda(body, body_raw: str) -> str:
     received_command_name = body['data']['name']
     for command_data in commands_data:
         if received_command_name == command_data['command_name_discord']:
             lambda_client.invoke(  # async invokes the lambda
                 FunctionName=command_data['command_lambda_arn'],
                 InvocationType='Event',
-                Payload=bodyRaw
+                Payload=body_raw
             )
             return defer_response()
     # this command was not provided in 'COMMANDS' variable in Terraform
