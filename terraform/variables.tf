@@ -6,7 +6,7 @@ variable "app_name" {
 }
 
 variable "command_data" {
-  type = set(object({
+  type = list(object({
     command_name: string # Terraform friendly command name
     command_name_discord: string # command name as it is in Discord
     handler: string # path to handler

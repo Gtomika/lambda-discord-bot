@@ -13,21 +13,21 @@ resource "aws_lambda_layer_version" "common_lambda_layer" {
 
 # Build a lambda function for each command
 module "command_lambda_modules" {
-  for_each = var.command_data
+  count = length(var.command_data)
   source = "./command_handler_lambda"
 
   app_name = var.app_name
   aws_region = var.aws_region
   environment = var.environment
 
-  command_name = each.value.command_name
-  command_name_discord = each.value.command_name_discord
-  handler_name = each.value.handler
-  path_to_deployment_package = "${path.module}/${each.value.path_to_deployment_package}"
+  command_name = var.command_data[count.index].command_name
+  command_name_discord = var.command_data[count.index].command_name_discord
+  handler_name = var.command_data[count.index].handler
+  path_to_deployment_package = "${path.module}/${var.command_data[count.index].path_to_deployment_package}"
   common_layer_arn = aws_lambda_layer_version.common_lambda_layer.arn
 
-  command_policy = lookup(local.command_policies, each.value.command_name)
-  environment_variables = lookup(local.environment_variables, each.value.command_name)
+  command_policy = lookup(local.command_policies, var.command_data[count.index].command_name)
+  environment_variables = lookup(local.environment_variables, var.command_data[count.index].command_name)
   log_retention_days = var.log_retention_days
 }
 
