@@ -42,9 +42,8 @@ resource "aws_apigatewayv2_stage" "api_gateway_stage" {
 }
 
 resource "aws_apigatewayv2_deployment" "api_gateway_deployment" {
-  name          = "Deploy-${local.api_gateway_name}"
-  protocol_type = "HTTP"
   api_id        = aws_apigatewayv2_api.api_gateway.id
+  description = "Deployment for the ${local.api_gateway_name} HTTP API Gateway"
 
   # To avoid attempting deployment before route + integration are ready
   depends_on = [aws_apigatewayv2_integration.discord_interaction_integration, aws_apigatewayv2_route.discord_interaction_route]
