@@ -6,7 +6,7 @@ variable "app_name" {
 }
 
 variable "command_data" {
-  type = list(object({
+  type = set(object({
     command_name: string # Terraform friendly command name
     command_name_discord: string # command name as it is in Discord
     handler: string # path to handler
@@ -64,4 +64,14 @@ variable "aws_assume_role_external_id" {
   type = string
   sensitive = true
   description = "Secret required to assume the Terraform role"
+}
+
+variable "log_retention_days" {
+  type = number
+  description = "How long to keep CloudWatch logs"
+}
+
+variable "discord_interaction_path" {
+  type = string
+  description = "URL path of the Discord interaction webhook. Must be relative and not start with '/'"
 }

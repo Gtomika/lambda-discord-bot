@@ -204,9 +204,10 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: '3.9'
+      - name: Install script dependencies
+        run: python -m pip install -r requirements.txt
       - name: Register commands to test guilds
-        run: |
-          python commands/register_slash_commands.py
+        run: python commands/register_slash_commands.py
     needs: terraform-apply
 
   register-commands-global:
@@ -221,6 +222,8 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: '3.9'
+      - name: Install script dependencies
+        run: python -m pip install -r requirements.txt
       - name: Register commands globally
         run: |
           python commands/register_slash_commands.py

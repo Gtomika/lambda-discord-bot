@@ -15,7 +15,6 @@ data aws_iam_policy_document "discord_interaction_log_policy" {
     sid = "AllowLambdaToLog"
     effect = "Allow"
     actions = [
-      "logs:CreateLogGroup",
       "logs:CreateLogStream",
       "logs:PutLogEvents",
     ]
@@ -56,8 +55,17 @@ resource "aws_iam_role" "discord_interaction_role" {
   }
 }
 
-resource "aws_lambda_function" "discord_interaction_lambda" {
+locals {
   function_name = "${var.app_name}-DiscordInteraction-${var.environment}-${var.aws_region}"
+}
+
+resource "aws_cloudwatch_log_group" "lambda_log_group" {
+  name = "aws/lambda/${local.function_name}"
+  retention_in_days = var.log_retention_days
+}
+
+resource "aws_lambda_function" "discord_interaction_lambda" {
+  function_name = local.function_name
   description = "This Lambda is getting all interaction calls from Discord, and distributing it for command processing lambdas."
   role          = aws_iam_role.discord_interaction_role.arn
 
@@ -71,4 +79,6 @@ resource "aws_lambda_function" "discord_interaction_lambda" {
   environment {
     variables = var.environment_variables
   }
+
+  depends_on = [aws_cloudwatch_log_group.lambda_log_group]
 }

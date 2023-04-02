@@ -6,11 +6,8 @@ from bot.commons import discord_utils
 # event: Discord API interaction event
 def lambda_handler(event, context):
     interaction_token = event['token']
-
-    if discord_utils.is_from_guild(event):
-        user_name = event['member']['user']['username']
-    else:
-        user_name = event['user']['username']
+    user_name = discord_utils.extract_username(event)
+    print(f'The user "{user_name}" invoked the command "architecture_choice"')
 
     options = event['data']['options']
     if len(options) > 0:

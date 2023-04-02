@@ -19,8 +19,17 @@ resource "aws_iam_role" "command_execution_role" {
   }
 }
 
+locals {
+  lambda_name = "${var.app_name}-${var.command_name}-${var.environment}-${var.aws_region}"
+}
+
+resource "aws_cloudwatch_log_group" "lambda_log_group" {
+  name = "/aws/lambda/${local.lambda_name}"
+  retention_in_days = var.log_retention_days
+}
+
 resource "aws_lambda_function" "command_lambda" {
-  function_name = "${var.app_name}-${var.command_name}-${var.environment}-${var.aws_region}"
+  function_name = local.lambda_name
   description = "This lambda processes and responds to the command ${var.command_name}"
   role          = aws_iam_role.command_execution_role.arn
 
@@ -34,6 +43,8 @@ resource "aws_lambda_function" "command_lambda" {
   environment {
     variables = var.environment_variables
   }
+
+  depends_on = [aws_cloudwatch_log_group.lambda_log_group]
 }
 
 

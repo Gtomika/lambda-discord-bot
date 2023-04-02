@@ -6,7 +6,6 @@ data "aws_iam_policy_document" "lambda_info_command_policy" {
     sid = "AllowLambdaToLog"
     effect = "Allow"
     actions = [
-      "logs:CreateLogGroup",
       "logs:CreateLogStream",
       "logs:PutLogEvents",
     ]
@@ -19,7 +18,6 @@ data "aws_iam_policy_document" "architecture_command_policy" {
     sid = "AllowLambdaToLog"
     effect = "Allow"
     actions = [
-      "logs:CreateLogGroup",
       "logs:CreateLogStream",
       "logs:PutLogEvents",
     ]

@@ -2,6 +2,7 @@ import os
 import datetime
 
 from bot.commons import discord_interaction_responder as responder
+from bot.commons import discord_utils
 
 aws_region = os.getenv('AWS_REGION')
 function_name = os.getenv('AWS_LAMBDA_FUNCTION_NAME')
@@ -13,6 +14,8 @@ execution_environment = os.getenv('AWS_EXECUTION_ENV')
 def lambda_handler(event, context):
     interaction_token = event['token']
     current_time = datetime.datetime.now()
+    user_name = discord_utils.extract_username(event)
+    print(f'The user "{user_name}" invoked the command "lambda_info"')
 
     message = f"""
     The lambda function that responded to this command is {function_name}.

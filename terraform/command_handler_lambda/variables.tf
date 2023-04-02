@@ -39,3 +39,8 @@ variable "handler_name" {
 variable "environment_variables" {
   type = map(string)
 }
+
+variable "log_retention_days" {
+  type = number
+  description = "How long to keep CloudWatch logs"
+}

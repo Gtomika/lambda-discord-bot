@@ -13,21 +13,22 @@ resource "aws_lambda_layer_version" "common_lambda_layer" {
 
 # Build a lambda function for each command
 module "command_lambda_modules" {
-  count = length(var.command_data)
+  for_each = var.command_data
   source = "./command_handler_lambda"
 
   app_name = var.app_name
   aws_region = var.aws_region
   environment = var.environment
 
-  command_name = var.command_data[count.index].command_name
-  command_name_discord = var.command_data[count.index].command_name_discord
-  handler_name = var.command_data[count.index].handler
-  path_to_deployment_package = "${path.module}/${var.command_data[count.index].path_to_deployment_package}"
+  command_name = each.value.command_name
+  command_name_discord = each.value.command_name_discord
+  handler_name = each.value.handler
+  path_to_deployment_package = "${path.module}/${each.value.path_to_deployment_package}"
   common_layer_arn = aws_lambda_layer_version.common_lambda_layer.arn
 
-  command_policy = lookup(local.command_policies, var.command_data[count.index].command_name)
-  environment_variables = lookup(local.environment_variables, var.command_data[count.index].command_name)
+  command_policy = lookup(local.command_policies, each.value.command_name)
+  environment_variables = lookup(local.environment_variables, each.value.command_name)
+  log_retention_days = var.log_retention_days
 }
 
 # This object will be encoded into JSON and put into the Discord Interaction lambda
@@ -60,4 +61,18 @@ module "discord_interaction_lambda" {
     APPLICATION_PUBLIC_KEY = var.discord_application_public_key
     COMMANDS = jsonencode(local.command_lambda_functions_data)
   }
+  log_retention_days = var.log_retention_days
+}
+
+module "api_gateway" {
+  source = "./api_gateway"
+
+  app_name = var.app_name
+  aws_region = var.aws_region
+  environment = var.environment
+
+  discord_interaction_lambda_name = module.discord_interaction_lambda.discord_interaction_lambda_name
+  discord_interaction_lambda_invocation_arn = module.discord_interaction_lambda.discord_interaction_lambda_invoke_arn
+  discord_interaction_path = var.discord_interaction_path
+  log_retention_days = var.log_retention_days
 }

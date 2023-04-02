@@ -29,3 +29,8 @@ variable "command_handler_lambda_arns" {
 variable "common_layer_arn" {
   type = string
 }
+
+variable "log_retention_days" {
+  type = number
+  description = "How long to keep CloudWatch logs"
+}
