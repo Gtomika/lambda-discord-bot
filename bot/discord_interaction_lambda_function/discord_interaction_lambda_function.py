@@ -30,7 +30,6 @@ def lambda_handler(event, context):
     if not is_request_verified(headers, body_raw):
         return agi.to_api_gateway_raw_response(401, 'invalid request signature')
 
-    body = json.loads(body_raw)
     # ACK message that is required for Discord interaction URL
     if body['type'] == ACK_TYPE:
         return agi.to_api_gateway_response(200, {
