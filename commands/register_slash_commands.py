@@ -27,11 +27,11 @@ def register_slash_command(command_json_path: str):
 
 def format_register_url(application_id: str, guild_id: str):
     if command_type == 'GLOBAL':
-        return 'https://discord.com/api/v10/applications/{application_id}/guilds/{guild_id}/commands'\
-            .format(application_id=application_id, guild_id=guild_id)
-    elif command_type == 'GUILD':
         return 'https://discord.com/api/v10/applications/{application_id}/commands'\
             .format(application_id=application_id)
+    elif command_type == 'GUILD':
+        return 'https://discord.com/api/v10/applications/{application_id}/guilds/{guild_id}/commands' \
+            .format(application_id=application_id, guild_id=guild_id)
     else:
         print(f"Unknown command type: {command_type}")
         exit(-1)
