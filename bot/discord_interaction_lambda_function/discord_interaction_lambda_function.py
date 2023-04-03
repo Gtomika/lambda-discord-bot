@@ -23,6 +23,7 @@ lambda_client = boto3.client('lambda')
 # this lambda handler receives interaction events from Discord,
 # through the AWS API Gateway
 def lambda_handler(event, context):
+    print(json.dumps(event, indent=4))
     headers, body = agi.parse_api_gateway_event(event)
     body_raw = json.dumps(body)
 
