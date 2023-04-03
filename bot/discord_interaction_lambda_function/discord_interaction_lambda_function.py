@@ -27,9 +27,7 @@ def lambda_handler(event, context):
 
     # Required by Discord to perform check to validate that this call came from them
     if not is_request_verified(headers, body_raw):
-        return agi.to_api_gateway_response(401, {
-            'error': 'Request is invalid'
-        })
+        return agi.to_api_gateway_raw_response(401, 'invalid request signature')
 
     body = json.loads(body_raw)
     # ACK message that is required for Discord interaction URL
@@ -53,9 +51,7 @@ def trigger_slash_command_handler_lambda(body, body_raw: str) -> str:
             )
             return defer_response()
     # this command was not provided in 'COMMANDS' variable in Terraform
-    return agi.to_api_gateway_response(500, {
-        'error': f'Slash command {received_command_name} not found and cannot be processed'
-    })
+    return agi.to_api_gateway_raw_response(500, f'Slash command {received_command_name} not found and cannot be processed')
 
 
 def defer_response():
