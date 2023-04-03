@@ -32,8 +32,9 @@ resource "aws_apigatewayv2_route" "discord_interaction_route" {
 
 # API gateway stage
 resource "aws_apigatewayv2_stage" "api_gateway_stage" {
-  name          = var.environment
+  name          = "$default"
   api_id        = aws_apigatewayv2_api.api_gateway.id
+  auto_deploy = true
   access_log_settings {
     destination_arn = aws_cloudwatch_log_group.api_gateway_log_group.arn
     format = jsonencode({

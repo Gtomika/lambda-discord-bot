@@ -52,7 +52,7 @@ jobs:
       - name: Package discord interaction lambda
         run: |
           sudo apt install zip
-          zip -r discord_interaction_lambda.zip bot/discord_interaction_lambda_function -x bot/discord_interaction_lambda_function/test**
+          zip -r discord_interaction_lambda.zip bot/discord_interaction_lambda_function/* -x bot/discord_interaction_lambda_function/test**
           stat discord_interaction_lambda.zip
       - uses: actions/upload-artifact@v3
         with:
@@ -67,7 +67,7 @@ jobs:
       - name: Package info command lambda
         run: |
           sudo apt install zip
-          zip -r info_lambda.zip bot/info_lambda_function -x bot/info_lambda_function/test**
+          zip -r info_lambda.zip bot/info_lambda_function/* -x bot/info_lambda_function/test**
           stat info_lambda.zip
       - uses: actions/upload-artifact@v3
         with:
@@ -82,7 +82,7 @@ jobs:
       - name: Package architecture choice lambda
         run: |
           sudo apt install zip
-          zip -r architecture_lambda.zip bot/architecture_lambda_function -x bot/architecture_lambda_function/test**
+          zip -r architecture_lambda.zip bot/architecture_lambda_function/* -x bot/architecture_lambda_function/test**
           stat architecture_lambda.zip
       - uses: actions/upload-artifact@v3
         with:

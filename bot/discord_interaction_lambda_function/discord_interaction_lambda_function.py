@@ -7,8 +7,11 @@ import boto3
 from bot.commons import api_gateway_interactions as agi
 from bot.commons.discord_utils import ACK_TYPE, DEFER_TYPE
 
+# Request verification
 application_public_key = os.getenv('APPLICATION_PUBLIC_KEY')
 verify_key = VerifyKey(bytes.fromhex(application_public_key))
+signature_header_name = 'X-Signature-Ed25519'
+timestamp_header_name = 'X-Signature-Timestamp'
 
 # JSON serialized data of commands
 commands_data_json = os.getenv('COMMANDS')
@@ -62,11 +65,17 @@ def defer_response():
 
 
 def is_request_verified(headers, body_raw: str) -> bool:
-    signature = headers["X-Signature-Ed25519"]
-    timestamp = headers["X-Signature-Timestamp"]
+    if signature_header_name in headers and timestamp_header_name in headers:
+        signature = headers[signature_header_name]
+        timestamp = headers[timestamp_header_name]
+    else:
+        print(f'Either {signature_header_name} or {timestamp_header_name} header '
+              f'was not found in the request: both are required')
+        return False
 
     try:
         verify_key.verify(f'{timestamp}{body_raw}'.encode(), bytes.fromhex(signature))
         return True
-    except BadSignatureError:
+    except Exception as e:  # any exception results in false
+        print(f'Exception while validating request: {str(e)}')
         return False

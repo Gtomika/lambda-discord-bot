@@ -1,16 +1,23 @@
 app_name = "LambdaDiscordBot"
 
+commons_layer_deployment_path = "../common-layer-deployment-package/common_layer.zip"
+
+discord_interaction_lambda_data = {
+  handler = "bot/discord_interaction_lambda_function/discord_interaction_lambda_function.lambda_handler"
+  path_to_deployment_package = "../discord-interaction-lambda-package/discord_interaction_lambda.zip"
+}
+
 command_data = [
   {
     command_name = "LambdaInfo"
     command_name_discord = "lambda_info"
-    handler = "info_lambda_function.lambda_handler"
+    handler = "bot/info_lambda_function/info_lambda_function.lambda_handler"
     path_to_deployment_package = "../info-lambda-package/info_lambda.zip"
   },
   {
     command_name = "ArchitectureChoice"
     command_name_discord = "architecture_choice"
-    handler = "architecture_lambda_function.lambda_handler"
+    handler = "bot/architecture_lambda_function/architecture_lambda_function.lambda_handler"
     path_to_deployment_package = "../architecture-lambda-package/architecture_lambda.zip"
   }
 ]

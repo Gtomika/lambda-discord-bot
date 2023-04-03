@@ -1,6 +1,6 @@
 locals {
-  common_layer_package_path = "${path.module}/../common-layer-deployment-package/common_layer.zip"
-  discord_interaction_lambda_package_path = "${path.module}/../discord-interaction-lambda-package/discord_interaction_lambda.zip"
+  common_layer_package_path = "${path.module}/${var.commons_layer_deployment_path}"
+  discord_interaction_lambda_package_path = "${path.module}/${var.discord_interaction_lambda_data.path_to_deployment_package}"
 }
 
 # The lambda layer that contains the libraries
@@ -50,7 +50,7 @@ module "discord_interaction_lambda" {
   aws_region = var.aws_region
   environment = var.environment
 
-  handler_name = "discord_interaction_lambda_function.lambda_handler"
+  handler_name = var.discord_interaction_lambda_data.handler
   path_to_deployment_package = local.discord_interaction_lambda_package_path
   common_layer_arn = aws_lambda_layer_version.common_lambda_layer.arn
 
