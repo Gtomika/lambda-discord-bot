@@ -24,8 +24,8 @@ lambda_client = boto3.client('lambda')
 # through the AWS API Gateway
 def lambda_handler(event, context):
     print(json.dumps(event, indent=4))
-    headers, body = agi.parse_api_gateway_event(event)
-    body_raw = json.dumps(body)
+    headers, body_raw = agi.parse_api_gateway_event(event)
+    body = json.loads(body_raw)
 
     # Required by Discord to perform check to validate that this call came from them
     if not is_request_verified(headers, body_raw):
@@ -42,6 +42,9 @@ def lambda_handler(event, context):
 
 
 def trigger_slash_command_handler_lambda(body, body_raw: str) -> str:
+    if 'name' not in body['data']:
+        agi.to_api_gateway_raw_response(500, f'Interaction does not contain data.name field: {body_raw}')
+
     received_command_name = body['data']['name']
     for command_data in commands_data:
         if received_command_name == command_data['command_name_discord']:

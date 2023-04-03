@@ -129,7 +129,7 @@ class DiscordInteractionLambdaTest(TestCase):
         from ...discord_interaction_lambda_function.discord_interaction_lambda_function import lambda_handler
         response = lambda_handler({
             'headers': {},
-            'body': json.loads(mock_info_interaction)
+            'body': mock_info_interaction
         }, {})
 
         self.assertEqual(401, response['statusCode'])
@@ -143,7 +143,7 @@ class DiscordInteractionLambdaTest(TestCase):
         from ...discord_interaction_lambda_function.discord_interaction_lambda_function import lambda_handler
         response = lambda_handler({
             'headers': {},
-            'body': json.loads(mock_ack_interaction)
+            'body': mock_ack_interaction
         }, {})
 
         self.assertEqual(200, response['statusCode'])
@@ -159,7 +159,7 @@ class DiscordInteractionLambdaTest(TestCase):
         from ...discord_interaction_lambda_function.discord_interaction_lambda_function import lambda_handler
         response = lambda_handler({
             'headers': {},
-            'body': json.loads(mock_info_interaction)
+            'body': mock_info_interaction
         }, {})
 
         self.assertEqual(200, response['statusCode'])
@@ -175,7 +175,7 @@ class DiscordInteractionLambdaTest(TestCase):
         from ...discord_interaction_lambda_function.discord_interaction_lambda_function import lambda_handler
         response = lambda_handler({
             'headers': {},
-            'body': json.loads(mock_architecture_interaction)
+            'body': mock_architecture_interaction
         }, {})
 
         self.assertEqual(200, response['statusCode'])
