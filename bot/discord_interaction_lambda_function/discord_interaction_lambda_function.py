@@ -10,8 +10,8 @@ from bot.commons.discord_utils import ACK_TYPE, DEFER_TYPE
 # Request verification
 application_public_key = os.getenv('APPLICATION_PUBLIC_KEY')
 verify_key = VerifyKey(bytes.fromhex(application_public_key))
-signature_header_name = 'X-Signature-Ed25519'
-timestamp_header_name = 'X-Signature-Timestamp'
+signature_header_name = 'x-signature-ed25519'
+timestamp_header_name = 'x-signature-timestamp'
 
 # JSON serialized data of commands
 commands_data_json = os.getenv('COMMANDS')
