@@ -194,6 +194,7 @@ def mock_aws_credentials():
     os.environ["AWS_SECURITY_TOKEN"] = "testing"
     os.environ["AWS_SESSION_TOKEN"] = "testing"
     os.environ["AWS_DEFAULT_REGION"] = "eu-central-1"
+    os.environ['AWS_REGION'] = "eu-central-1"
 
 
 def mock_create_lambda(function_name: str) -> str:

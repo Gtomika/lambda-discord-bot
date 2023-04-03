@@ -11,6 +11,12 @@ mock_signature_incorrect = "39c4903df0b00ac32ba158db956ee39586adf05fea6be714055a
 
 os.environ['APPLICATION_PUBLIC_KEY'] = mock_public_key
 os.environ['COMMANDS'] = '{}'
+os.environ["AWS_ACCESS_KEY_ID"] = "testing"
+os.environ["AWS_SECRET_ACCESS_KEY"] = "testing"
+os.environ["AWS_SECURITY_TOKEN"] = "testing"
+os.environ["AWS_SESSION_TOKEN"] = "testing"
+os.environ["AWS_DEFAULT_REGION"] = "eu-central-1"
+os.environ['AWS_REGION'] = "eu-central-1"
 
 from ..discord_interaction_lambda_function import is_request_verified, signature_header_name, timestamp_header_name
 
