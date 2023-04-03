@@ -77,6 +77,5 @@ resource "aws_lambda_permission" "api_gateway_lambda_permission" {
   action        = "lambda:InvokeFunction"
   function_name = var.discord_interaction_lambda_name
   principal     = "apigateway.amazonaws.com"
-  # only allow this invocation from the exact path
-  source_arn = "${aws_apigatewayv2_stage.api_gateway_stage.execution_arn}/${var.discord_interaction_path}"
+  source_arn = "${aws_apigatewayv2_api.api_gateway.execution_arn}/*"
 }
