@@ -23,11 +23,10 @@ resource "aws_apigatewayv2_route" "discord_interaction_route" {
 resource "aws_apigatewayv2_integration" "discord_interaction_integration" {
   api_id           = aws_apigatewayv2_api.api_gateway.id
   integration_type = "AWS_PROXY"
+  description = "Forward to POST request to the Discord Interaction lambda ${var.discord_interaction_lambda_name}"
 
   integration_method        = "POST"
   integration_uri           = var.discord_interaction_lambda_invocation_arn
-  connection_type           = "INTERNET"
-  content_handling_strategy = "CONVERT_TO_TEXT"
 }
 
 # API gateway stage and deployment
