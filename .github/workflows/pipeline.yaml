@@ -184,7 +184,7 @@ jobs:
         run: |
           cd terraform
           terraform init
-          terraform destroy -var-file=inputs.tfvars \
+          terraform destroy -auto-approve -var-file=inputs.tfvars \
             -var aws_region="$AWS_REGION" \
             -var environment="$ENVIRONMENT" \
             -var discord_bot_token="$DISCORD_BOT_TOKEN" \

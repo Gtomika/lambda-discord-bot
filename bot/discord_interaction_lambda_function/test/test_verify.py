@@ -18,7 +18,7 @@ os.environ["AWS_SESSION_TOKEN"] = "testing"
 os.environ["AWS_DEFAULT_REGION"] = "eu-central-1"
 os.environ['AWS_REGION'] = "eu-central-1"
 
-from ..discord_interaction_lambda_function import is_request_verified, signature_header_name, timestamp_header_name
+from ..lambda_function import is_request_verified, signature_header_name, timestamp_header_name
 
 
 class TestVerify(unittest.TestCase):
