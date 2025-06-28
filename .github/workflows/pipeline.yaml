@@ -43,7 +43,7 @@ jobs:
           zip -r common_layer.zip python
           echo "Zipped common layer into archive 'common_layer.zip'"
           stat common_layer.zip
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: common-layer-deployment-package
           path: common_layer.zip
@@ -58,7 +58,7 @@ jobs:
           sudo apt install zip
           zip -r discord_interaction_lambda.zip bot/discord_interaction_lambda_function/* -x bot/discord_interaction_lambda_function/test**
           stat discord_interaction_lambda.zip
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: discord-interaction-lambda-package
           path: discord_interaction_lambda.zip
@@ -73,7 +73,7 @@ jobs:
           sudo apt install zip
           zip -r info_lambda.zip bot/info_lambda_function/* -x bot/info_lambda_function/test**
           stat info_lambda.zip
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: info-lambda-package
           path: info_lambda.zip
@@ -88,7 +88,7 @@ jobs:
           sudo apt install zip
           zip -r architecture_lambda.zip bot/architecture_lambda_function/* -x bot/architecture_lambda_function/test**
           stat architecture_lambda.zip
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: architecture-lambda-package
           path: architecture_lambda.zip
@@ -102,7 +102,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
       - uses: hashicorp/setup-terraform@v2
       - name: Validate Terraform configuration
         run: |
@@ -125,7 +125,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v2
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
       - name: Plan actions by Terraform
         run: |
           cd terraform
@@ -139,7 +139,7 @@ jobs:
             -var aws_terraform_role_arn="$AWS_TERRAFORM_ROLE_ARN" \
             -var aws_assume_role_external_id="$AWS_STS_EXTERNAL_KEY"
           cd ..
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: terraform-plan
           path: terraform/app.tfplan
@@ -159,7 +159,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v2
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
       - name: Apply Terraform plan
         run: |
           cd terraform
@@ -181,7 +181,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v2
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
       - name: Destroy infrastructure with Terraform
         run: |
           cd terraform
