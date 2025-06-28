@@ -9,7 +9,7 @@ jobs:
   run-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: '3.13'
@@ -29,7 +29,7 @@ jobs:
   package-common-layer:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: '3.13'
@@ -52,7 +52,7 @@ jobs:
   package-discord-interaction-lambda:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Package discord interaction lambda
         run: |
           sudo apt install zip
@@ -67,7 +67,7 @@ jobs:
   package-info-lambda:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Package info command lambda
         run: |
           sudo apt install zip
@@ -82,7 +82,7 @@ jobs:
   package-architecture-lambda:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Package architecture choice lambda
         run: |
           sudo apt install zip
@@ -101,9 +101,9 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
-      - uses: hashicorp/setup-terraform@v2
+      - uses: hashicorp/setup-terraform@v3
       - name: Validate Terraform configuration
         run: |
           ls -R --ignore 'venv'
@@ -123,8 +123,8 @@ jobs:
       ENVIRONMENT: ${{ vars.ENVIRONMENT }}
       DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: hashicorp/setup-terraform@v2
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
       - uses: actions/download-artifact@v4
       - name: Plan actions by Terraform
         run: |
@@ -157,8 +157,8 @@ jobs:
       ENVIRONMENT: ${{ vars.ENVIRONMENT }}
       DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: hashicorp/setup-terraform@v2
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
       - uses: actions/download-artifact@v4
       - name: Apply Terraform plan
         run: |
@@ -179,8 +179,8 @@ jobs:
       ENVIRONMENT: ${{ vars.ENVIRONMENT }}
       DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: hashicorp/setup-terraform@v2
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
       - uses: actions/download-artifact@v4
       - name: Destroy infrastructure with Terraform
         run: |
@@ -204,7 +204,7 @@ jobs:
       GUILD_ID: ${{ vars.DISCORD_TEST_GUILD_ID }}
       COMMAND_TYPE: GUILD
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: '3.13'
@@ -222,7 +222,7 @@ jobs:
       APPLICATION_ID: ${{ vars.DISCORD_APPLICATION_ID }}
       COMMAND_TYPE: GLOBAL
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: '3.13'
