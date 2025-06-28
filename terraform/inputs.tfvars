@@ -9,7 +9,7 @@ discord_interaction_lambda_data = {
 
 command_data = [
   {
-    command_name = "Help"
+    command_name = "LambdaInfo"
     command_name_discord = "lambda_info"
     handler = "bot/info_lambda_function/.lambda_handler"
     path_to_deployment_package = "../info-lambda-package/info_lambda.zip"
