@@ -4,6 +4,8 @@ This Discord bot is a proof of concept: how to host Discord bots on AWS Lambda
 and API Gateway. Using serverless architecture can reduce costs for bot hosting: it 
 will be basically free unless a lot of interactions happen with the bot.
 
+The bot is in a destroyed state by default.
+
 ## Invite URL
 
 ```
